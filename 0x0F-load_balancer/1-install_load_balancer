@@ -1,40 +1,26 @@
 #!/usr/bin/env bash
-#Installs and configures HAproxy in a load balancer server
+# Install HAproxy on clean ubuntu 14.04 machine and setup to proxy requests
+# between 144-web-01 and 144-web-02.
 
-apt-get install -y software-properties-common
-add-apt-repository -y ppa:vbernat/haproxy-1.8
-apt-get update
-apt-get install -y haproxy=1.8.\*
-
-echo "ENABLED=1" >> /etc/default/haproxy
-mv /etc/haproxy/haproxy.cfg{,.original}
-touch /etc/haproxy/haproxy.cfg
-
-printf %s "global
-    log 127.0.0.1 local0 notice
-    maxconn 2000
-    user haproxy
-    group haproxy
-defaults
-    log     global
-    mode    http
-    option  httplog
-    option  dontlognull
-    retries 3
-    option redispatch
-    timeout connect  5000
-    timeout client  10000
-    timeout server  10000
-listen hbnb
-    bind 0.0.0.0:80
-    mode http
-    stats enable
-    stats uri /haproxy?stats
-    balance roundrobin
-    option httpclose
-    option forwardfor
-    server 83704-web-01 100.25.196.71 check
-    server 83704-web-02 54.236.221.114 check
-" >> /etc/haproxy/haproxy.cfg
-
-service haproxy start
+apt-get update -y && \
+apt-get install -y software-properties-common && \
+add-apt-repository -y ppa:vbernat/haproxy-1.7 && \
+apt-get update -y && \
+apt-get install -y haproxy && \
+if [ -e '/etc/haproxy/haproxy.cfg.orig' ]
+then
+    cat /etc/haproxy/haproxy.cfg.orig > /etc/haproxy/haproxy.cfg
+else
+    cp /etc/haproxy/haproxy.cfg /etc/haproxy/haproxy.cfg.orig
+fi
+echo -e \
+"\nlisten load_balancer
+\tbind :80
+\tmode http
+\tstats enable
+\tstats uri /haproxy?stats
+\tbalance roundrobin
+\tserver 350143-web-01 54.236.221.114 check
+\tserver 350143-web-02 100.25.196.71 check" \
+    >> /etc/haproxy/haproxy.cfg
+service haproxy restart
