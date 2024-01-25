@@ -1,21 +1,33 @@
 [![Burning Bus](https://s3.amazonaws.com/intranet-projects-files/holbertonschool-sysadmin_devops/294/pQ9YzVY.gif)](https://s3.amazonaws.com/intranet-projects-files/holbertonschool-sysadmin_devops/294/pQ9YzVY.gif)
 
-# BooktifuL Failure Report
+**Bookty Postmortem: Critical Platform Failure**
 
-## Overview
-Last week, the BooktifuL platform experienced a critical failure, resulting in a 500 Error for all requests made on the platform routes. This incident caused a disruption in service, impacting approximately 90% of our users. The root cause was identified as the failure of our master server, web-01.
+**Overview:**
+Last week, the Bookty platform encountered a severe failure, leading to a universal 500 Error across all platform routes. This incident significantly disrupted services, impacting around 90% of our user base. The root cause was traced back to the malfunction of our master server, web-01.
 
-## Timeline
-The error was first detected on Friday, February 24th, at 14:00 hours (West Africa Time) when our Site Reliability Engineer, Mr. Douglas, observed a significant lag in the master server's speed. Our on-call engineers promptly disconnected the malfunctioning master server, web-01, for a thorough system analysis. During this period, all incoming requests were redirected to the client server, web-02. The issue was successfully resolved by Saturday, February 25th, at 24:00 hours (West Africa Time).
+**Timeline:**
+- **Detection Time:** The issue was first noticed on Friday, November 13th, at 01:26 hours (West Africa Time) when Mr. Matthew, our Site Reliability Engineer, observed a noticeable lag in the master server's performance.
+- **Actions Taken:**
+  - The on-call engineers swiftly disconnected the malfunctioning master server (web-01) for detailed analysis.
+  - During this period, all incoming requests were rerouted to the client server (web-02).
+- **Resolution Time:** The problem was successfully resolved by Saturday, November 15th, at 18:46 hours (West Africa Time).
 
-## Root Cause and Resolution
-The BooktifuL platform is hosted on two Ubuntu cloud servers. The master server, web-01, which was originally designated to handle all requests, experienced a memory outage due to an overwhelming number of requests. This was exacerbated by a previous test where the client server, web-02, was temporarily disconnected for testing purposes and was not properly reconnected to the load balancer afterward.
+**Root Cause and Resolution:**
+- **Root Cause:**
+  - The Bookty platform operates on two Ubuntu cloud servers. The primary server, web-01, experienced a memory outage due to an overwhelming number of requests.
+  - This was compounded by a previous testing scenario where the client server (web-02) was temporarily disconnected for testing but was not adequately reconnected to the load balancer.
+- **Resolution:**
+  - The master server underwent a temporary disconnection for memory clean-up.
+  - It was then reconnected to the load balancer, and a round-robin algorithm was implemented to ensure an equitable distribution of requests between the master and client servers.
 
-To address the issue, the master server underwent a temporary disconnection for memory clean-up. It was then reconnected to the load balancer, and a round-robin algorithm was configured to ensure an equal distribution of requests between the master and client servers.
+**Measures Against Future Problems:**
+To mitigate the risk of similar incidents in the future, we have instituted the following measures:
 
-## Measures Against Future Problems
-To prevent similar issues in the future, we have implemented the following measures:
+- **Optimal Load Balancing Algorithm:**
+  - Ensure the selection of the most suitable load balancing algorithm for your programs.
+- **Continuous Server Monitoring:**
+  - Implement regular monitoring of server health to promptly identify and address any anomalies.
+- **Backup Servers:**
+  - Maintain additional backup servers to prevent the program from going completely offline during unforeseen issues.
 
-1. **Optimal Load Balancing Algorithm:** Ensure the selection of the most suitable load balancing algorithm for your programs.
-2. **Continuous Server Monitoring:** Regularly monitor server health to promptly identify and address any anomalies.
-3. **Backup Servers:** Maintain additional backup servers to prevent the program from going completely offline during unforeseen issues.
+This postmortem outlines the key details of the platform failure, our response timeline, and the implemented measures to prevent such issues from reoccurring in the future.
