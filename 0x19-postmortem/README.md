@@ -1,4 +1,4 @@
-[!][Burning Bus](https://twitter.com/devopsreact/status/834887829486399488)]
+[!] [(https://twitter.com/devopsreact/status/834887829486399488)]
 # BooktifuL Failure Report
 
 ## Overview
